@@ -27,13 +27,12 @@
   async: 14400
   poll: 30
 
-- name: Check doc_root path
-  shell: ls -all {{ cassandra_backup_dir }}/
-  register: doc_data
-
-- name: Print doc_root to console
-  debug:
-    var: doc_data
+- name: Create tar file
+  become: true
+  shell: |
+    tar -czf "{{ cassandra_backup_dir }}/{{ cassandra_backup_folder_name }}.tar.gz" "{{ cassandra_backup_folder_name }}"
+  args:
+    chdir: "{{ cassandra_backup_dir }}"
 
 - name: Copy file to NFS Mount
   copy:
